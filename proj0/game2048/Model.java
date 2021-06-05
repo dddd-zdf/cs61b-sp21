@@ -120,12 +120,18 @@ public class Model extends Observable {
         {
             for (int col = 0; col < this.board.size(); col += 1)
             {
+                int lastp = -1;
                 for (int row = this.board.size() - 2; row >= 0; row -= 1)
                 {
-                    //int lastp;
                     if (tile(col, row) == null)
                     //me not null
                     {
+                        continue;
+                    }
+                    if (lastp >= 0)
+                    {
+                        this.board.move(col, lastp -1, tile(col, row));
+                        changed = true;
                         continue;
                     }
                     for (int prow = row; prow < this.board.size(); prow += 1)
@@ -147,6 +153,7 @@ public class Model extends Observable {
                                 if (tile(col, prow).value() == tile(col, row).value())
                                 {
                                     this.board.move(col, prow, tile(col, row));
+                                    lastp = prow;
                                     this.score += tile(col,prow).value();
                                 }else
                                 {
@@ -272,7 +279,7 @@ public class Model extends Observable {
 
 
     @Override
-     /** Returns the model as a string, used for debugging. */
+    /** Returns the model as a string, used for debugging. */
     public String toString() {
         Formatter out = new Formatter();
         out.format("%n[%n");
