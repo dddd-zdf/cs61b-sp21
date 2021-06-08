@@ -3,6 +3,7 @@ package game2048;
 import java.util.Formatter;
 import java.util.Observable;
 
+import static java.lang.Math.rint;
 import static java.lang.Math.sqrt;
 
 
@@ -117,46 +118,50 @@ public class Model extends Observable {
         // changed local variable to true.
         if (side == side.NORTH)
         {
-            for (int row = this.board.size() - 1; row >= 0; row -= 1)
+            for (int col = 0; col < this.board.size(); col += 1)
             {
-                for (int col = 0; col < this.board.size(); col += 1)
+                int lastp = -1;
+                for (int row = this.board.size() - 2; row >= 0; row -= 1)
                 {
                     if (tile(col, row) == null)
+                    //me not null
                     {
                         continue;
                     }
-                    int prow = row;
-                    while ((prow + 1 < this.board.size()) && (tile(col, prow + 1) == null))
+                    if (lastp >= 0)
                     {
-                        prow += 1;
-                    }
-                    if (tile(col, prow) == null)
-                    {
-                        this.board.move(col, prow, tile(col, row));
+                        this.board.move(col, lastp -1, tile(col, row));
                         changed = true;
                         continue;
                     }
-                    if (tile(col, row).value() == tile(col, prow).value())
+                    for (int prow = row; prow < this.board.size(); prow += 1)
+                    //
                     {
-                        this.board.move(col, prow, tile(col, row));
-                        changed = true;
-                    }else
-                    {
-                        if (prow == row)
+                        if (tile(col, prow) == null)
                         {
-                            continue;
-                        }else
-                        {
-                            this.board.move(col, prow - 1, tile(col, row));
-                            changed = true;
+                            if (prow == this.board.size() -1)
+                            {
+                                this.board.move(col, prow, tile(col, row));
+                                changed = true;
+                            }
                             continue;
                         }
-                    }
-                    if (tile(col, row).value() == tile(col, prow).value())
-                    {
-                        this.board.move(col, prow, tile(col, row));
-                        changed = true;
-                        continue;
+                        if (prow != row)
+                        {
+                            if (tile(col , prow) != null)
+                            {
+                                if (tile(col, prow).value() == tile(col, row).value())
+                                {
+                                    this.board.move(col, prow, tile(col, row));
+                                    lastp = prow;
+                                    this.score += tile(col,prow).value();
+                                }else
+                                {
+                                    this.board.move(col, prow - 1, tile(col, row));
+                                }
+                                changed = true;
+                            }
+                        }
                     }
                 }
             }
@@ -274,7 +279,7 @@ public class Model extends Observable {
 
 
     @Override
-     /** Returns the model as a string, used for debugging. */
+    /** Returns the model as a string, used for debugging. */
     public String toString() {
         Formatter out = new Formatter();
         out.format("%n[%n");
