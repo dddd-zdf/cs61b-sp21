@@ -117,13 +117,48 @@ public class Model extends Observable {
         // changed local variable to true.
         if (side == side.NORTH)
         {
-            for (int col = 0; col >= 0; col += 1)
+            for (int row = this.board.size() - 1; row >= 0; row -= 1)
             {
-                for (int row = this.board.size() - 2; row >= 0; row -= 1)
+                for (int col = 0; col < this.board.size(); col += 1)
                 {
-
+                    if (tile(col, row) == null)
+                    {
+                        continue;
+                    }
+                    int prow = row;
+                    while ((prow + 1 < this.board.size()) && (tile(col, prow + 1) == null))
+                    {
+                        prow += 1;
+                    }
+                    if (tile(col, prow) == null)
+                    {
+                        this.board.move(col, prow, tile(col, row));
+                        changed = true;
+                        continue;
+                    }
+                    if (tile(col, row).value() == tile(col, prow).value())
+                    {
+                        this.board.move(col, prow, tile(col, row));
+                        changed = true;
+                    }else
+                    {
+                        if (prow == row)
+                        {
+                            continue;
+                        }else
+                        {
+                            this.board.move(col, prow - 1, tile(col, row));
+                            changed = true;
+                            continue;
+                        }
+                    }
+                    if (tile(col, row).value() == tile(col, prow).value())
+                    {
+                        this.board.move(col, prow, tile(col, row));
+                        changed = true;
+                        continue;
+                    }
                 }
-
             }
         }
 
