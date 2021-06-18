@@ -14,8 +14,18 @@ public class test {
     }
     @Test
     public void AddLastTest() {
-        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        LinkedListDeque<Double> L = new LinkedListDeque<>();
+        L.addLast(Math.random() - 0.5);
         L.printDeque();
+        System.out.println();
+        L.addLast(Math.random() - 0.5);
+        L.addLast(Math.random() - 0.5);
+        L.addLast(Math.random() - 0.5);
+        L.printDeque();
+        System.out.println();
+        L.removeFirst();
+        L.printDeque();
+
     }
     @Test
     public void isEmptyTest() {
