@@ -71,4 +71,10 @@ public class test {
         assertEquals("92", L.removeLast());
         L.printDeque();
     }
+    @Test
+    public void instanceofTest() {
+        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        ArrayDeque<Integer> A = new ArrayDeque<>();
+        System.out.println(L.equals(A));
+    }
 }

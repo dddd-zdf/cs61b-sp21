@@ -1,7 +1,5 @@
 package deque;
 
-import net.sf.saxon.style.XSLMapEntry;
-
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
@@ -116,22 +114,36 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     private class LLDequeIterator implements Iterator<T> {
-        private int pos;
+        private Node curr;
         public LLDequeIterator() {
-            pos = 0;
+            curr = sentinel.next;
         }
         @Override
         public boolean hasNext() {
-            return pos < size;
+            return curr.next != sentinel;
         }
         @Override
         public T next() {
-            T item = get(pos);
-            pos += 1;
+            T item = curr.value;
+            curr = curr.next;
             return item;
         }
     }
     public Iterator<T> iterator() {
         return new LLDequeIterator();
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Deque) || this.size != ((Deque<?>) o).size()) {
+            return false;
+        }
+        Iterator<T> i1 = this.iterator();
+        Iterator<T> i2 = ((Deque<T>) o).iterator();
+        while (i1.hasNext() && i2.hasNext()) {
+            if (i1.next() != i2.next()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

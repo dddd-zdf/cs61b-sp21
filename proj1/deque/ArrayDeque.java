@@ -3,7 +3,9 @@ package deque;
 import afu.org.checkerframework.checker.igj.qual.I;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     T[] value;
@@ -110,6 +112,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         return this.value[output_index];
     }
 
+//  private class ArrayIterator<T> implements Iterator<T> {
     private class ArrayIterator implements Iterator<T> {
         private int pos;
         public ArrayIterator() {
@@ -118,7 +121,6 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         public boolean hasNext() {
             return pos < size;
         }
-
         public T next() {
             T item = get(pos);
             pos += 1;
@@ -127,5 +129,20 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
     public Iterator<T> iterator() {
         return new ArrayIterator();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (! (o instanceof Deque) || this.size != ((Deque<?>) o).size()) {
+            return false;
+        }
+        Iterator<T> i1 = this.iterator();
+        Iterator<T> i2 = ((Deque<T>) o).iterator();
+        while (i1.hasNext() && i2.hasNext()) {
+            if (i1.next() != i2.next()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
