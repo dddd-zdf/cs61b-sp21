@@ -2,7 +2,9 @@ package deque;
 
 import net.sf.saxon.style.XSLMapEntry;
 
-public class LinkedListDeque<T> {
+import java.util.Iterator;
+
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private class Node{
         private T value;
         private Node next;
@@ -93,24 +95,43 @@ public class LinkedListDeque<T> {
         return p.value;
     }
 
-    public T getHelperhead (int index, Node n) {
+    public T getHelperHead (int index, Node n) {
         if (index == 0) {
             return n.value;
         }
-        return getHelperhead(index - 1, n.next);
+        return getHelperHead(index - 1, n.next);
     }
-    public T getHelperrear (int index, Node n) {
+    public T getHelperRear (int index, Node n) {
         if (index == 0) {
             return n.value;
         }
-        return getHelperrear(index - 1, n.prev);
+        return getHelperRear(index - 1, n.prev);
     }
     public T getRecursive(int index) {
         if (index > size / 2) {
-            return getHelperrear(this.size() - index - 1, sentinel.prev);
+            return getHelperRear(this.size() - index - 1, sentinel.prev);
         } else {
-            return getHelperhead(index - 1, sentinel.next);
+            return getHelperHead(index - 1, sentinel.next);
         }
     }
 
+    private class LLDequeIterator implements Iterator<T> {
+        private int pos;
+        public LLDequeIterator() {
+            pos = 0;
+        }
+        @Override
+        public boolean hasNext() {
+            return pos < size;
+        }
+        @Override
+        public T next() {
+            T item = get(pos);
+            pos += 1;
+            return item;
+        }
+    }
+    public Iterator<T> iterator() {
+        return new LLDequeIterator();
+    }
 }

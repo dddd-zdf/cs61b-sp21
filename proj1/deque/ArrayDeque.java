@@ -1,8 +1,11 @@
 package deque;
 
-import java.lang.reflect.Array;
+import afu.org.checkerframework.checker.igj.qual.I;
 
-public class ArrayDeque<T> {
+import java.lang.reflect.Array;
+import java.util.Iterator;
+
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     T[] value;
     int first;
     int last;
@@ -72,8 +75,6 @@ public class ArrayDeque<T> {
         }
         System.out.println();
     }
-
-
     public T removeFirst() {
         if (isEmpty()) {
             return null;
@@ -107,5 +108,24 @@ public class ArrayDeque<T> {
             output_index -= value.length;
         }
         return this.value[output_index];
+    }
+
+    private class ArrayIterator implements Iterator<T> {
+        private int pos;
+        public ArrayIterator() {
+            pos = 0;
+        }
+        public boolean hasNext() {
+            return pos < size;
+        }
+
+        public T next() {
+            T item = get(pos);
+            pos += 1;
+            return item;
+        }
+    }
+    public Iterator<T> iterator() {
+        return new ArrayIterator();
     }
 }
